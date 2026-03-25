@@ -138,7 +138,8 @@ canvas.height = video.clientHeight
 ctx.drawImage(video,0,0,canvas.width,canvas.height)
 
 
-const radius = 50
+const innerRadius = 50
+const midRadius = 120
 
 const x = Math.max(radius,Math.min(canvas.width-radius,gazeX))
 const y = Math.max(radius,Math.min(canvas.height-radius,gazeY))
@@ -147,28 +148,58 @@ const y = Math.max(radius,Math.min(canvas.height-radius,gazeY))
 const imgData = ctx.getImageData(
 x-radius,
 y-radius,
-radius*2,
-radius*2
+midRadius*2,
+midRadius*2
 )
 
 const data = imgData.data
 
 for(let i=0;i<data.length;i+=4){
 
-data[i] = Math.min(255,data[i]*1.3)
-data[i+1] = Math.min(255,data[i+1]*1.3)
-data[i+2] = Math.min(255,data[i+2]*1.3)
+for(let yOffset=0;yOffset<midRadius*2;yOffset++){
+for(let xOffset=0;xOffset<midRadius*2;xOffset++){
 
+const index = (yOffset * midRadius * 2 + xOffset) * 4
+
+const dx = xOffset - midRadius
+const dy = yOffset - midRadius
+
+const dist = Math.sqrt(dx*dx + dy*dy)
+
+let strength = 1
+
+if(dist < innerRadius){
+strength = 1.6
+}
+else if(dist < midRadius){
+strength = 1.25
+}
+else{
+strength = 1
+}
+
+data[index] *= strength
+data[index+1] *= strength
+data[index+2] *= strength
+
+}
 }
 
 ctx.putImageData(imgData,x-radius,y-radius)
 
 
-// draw gaze circle
+// draw foveal zone (center)
 ctx.beginPath()
-ctx.arc(x,y,radius,0,2*Math.PI)
-ctx.strokeStyle="rgba(255,0,0,0.7)"
-ctx.lineWidth=1.5
+ctx.arc(x,y,innerRadius,0,2*Math.PI)
+ctx.strokeStyle="red"
+ctx.lineWidth=2
+ctx.stroke()
+
+// draw mid zone
+ctx.beginPath()
+ctx.arc(x,y,midRadius,0,2*Math.PI)
+ctx.strokeStyle="orange"
+ctx.lineWidth=2
 ctx.stroke()
 
 
