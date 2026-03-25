@@ -7,6 +7,26 @@ let gazeX = 200
 let gazeY = 200
 
 //--------------------------------------------------
+// METRICS VARIABLES
+//--------------------------------------------------
+
+let totalFrames = 0
+let detectedFrames = 0
+
+let prevX = gazeX
+let prevY = gazeY
+let totalJitter = 0
+
+let lastTime = performance.now()
+let fps = 0
+
+let errorSum = 0
+let errorCount = 0
+
+let targetX = 0
+let targetY = 0
+
+//--------------------------------------------------
 // VIDEO UPLOAD
 //--------------------------------------------------
 
@@ -79,11 +99,13 @@ async function trackFace(cam){
 
 setInterval(async()=>{
 
+totalFrames++
 const detection = await faceapi
 .detectSingleFace(cam,new faceapi.TinyFaceDetectorOptions())
 .withFaceLandmarks(true)
 
 if(!detection) return
+detectedFrames++
 
 const leftEye = detection.landmarks.getLeftEye()
 const rightEye = detection.landmarks.getRightEye()
@@ -100,11 +122,35 @@ leftEye.reduce((sum,p)=>sum+p.y,0)/leftEye.length
 const avgRightY =
 rightEye.reduce((sum,p)=>sum+p.y,0)/rightEye.length
 
-let targetX = canvas.width - ((avgLeftX + avgRightX)/2 * 2)
-let targetY = ((avgLeftY + avgRightY)/2) * 3.5
+const eyeX = (avgLeftX + avgRightX) / 2
+const eyeY = (avgLeftY + avgRightY) / 2
+
+// normalize webcam coords
+const normX = eyeX / cam.videoWidth
+const normY = eyeY / cam.videoHeight
+
+// map to canvas
+let targetX = canvas.width * (1 - normX)
+let targetY = canvas.height * normY
 
 gazeX = gazeX*0.8 + targetX*0.2
 gazeY = gazeY * 0.7 + targetY * 0.3
+
+// JITTER
+let dx = Math.abs(gazeX - prevX)
+let dy = Math.abs(gazeY - prevY)
+
+totalJitter += (dx + dy)
+
+prevX = gazeX
+prevY = gazeY
+// ERROR
+let error = Math.sqrt(
+(gazeX - targetX)**2 + (gazeY - targetY)**2
+)
+
+errorSum += error
+errorCount++
 
 },100)
 
@@ -119,6 +165,11 @@ function enhanceRegion(){
 
 canvas.width = video.clientWidth
 canvas.height = video.clientHeight
+targetX = canvas.width / 2
+targetY = canvas.height / 2
+let now = performance.now()
+fps = 1000 / (now - lastTime)
+lastTime = now
 
 ctx.drawImage(video,0,0,canvas.width,canvas.height)
 
@@ -178,6 +229,24 @@ ctx.arc(x,y,midRadius,0,2*Math.PI)
 ctx.strokeStyle="orange"
 ctx.lineWidth=2
 ctx.stroke()
+//---------------- DISPLAY METRICS ----------------
+
+ctx.fillStyle = "white"
+ctx.font = "14px Arial"
+
+let detectionRate = (detectedFrames / totalFrames * 100).toFixed(1)
+let avgJitter = (totalJitter / totalFrames).toFixed(2)
+let avgError = (errorSum / errorCount).toFixed(2)
+
+ctx.fillText("FPS: " + fps.toFixed(1), 10, 20)
+ctx.fillText("Detection: " + detectionRate + "%", 10, 40)
+ctx.fillText("Jitter: " + avgJitter, 10, 60)
+ctx.fillText("Error: " + avgError + " px", 10, 80)
+// draw reference center point
+ctx.fillStyle = "green"
+ctx.beginPath()
+ctx.arc(targetX,targetY,4,0,2*Math.PI)
+ctx.fill()
 
 requestAnimationFrame(enhanceRegion)
 
