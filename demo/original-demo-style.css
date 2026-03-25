@@ -1,0 +1,72 @@
+body{
+  margin:0;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  overflow:hidden;
+  font-family:sans-serif;
+  color:white;
+}
+
+/* webcam */
+video{
+  position:absolute;
+  right:20px;
+  bottom:20px;
+  width:220px;
+  border-radius:15px;
+  box-shadow:0 0 20px rgba(0,0,0,0.6);
+  z-index:10;
+}
+
+canvas{
+  position:absolute;
+  right:20px;
+  bottom:20px;
+  z-index:11;
+}
+
+/* scene container */
+.scene{
+  height:100vh;
+  width:100vw;
+  position:relative;
+  perspective:900px;
+  overflow:hidden;
+}
+
+/* cubes */
+.cube{
+  position:absolute;
+  width:90px;
+  height:90px;
+  border-radius:18px;
+
+  background:linear-gradient(145deg,#4facfe,#00f2fe);
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.5),
+    inset 0 0 20px rgba(255,255,255,.1);
+
+  transform:rotateX(30deg) rotateY(30deg) scale(1);
+  transition:all .25s ease;
+}
+
+/* FOVEAL */
+.cube.active{
+  transform:scale(1.6) rotateX(0deg) rotateY(0deg);
+  background:linear-gradient(145deg,#43e97b,#38f9d7);
+  box-shadow:
+    0 0 60px rgba(56,249,215,.95),
+    0 0 120px rgba(56,249,215,.4);
+}
+
+/* MID PERIPHERAL */
+.cube.mid{
+  transform:scale(1.2) rotateX(10deg) rotateY(10deg);
+  filter:brightness(1.2);
+}
+
+/* FAR PERIPHERAL */
+.cube.far{
+  opacity:.35;
+  filter:blur(1px);
+}
