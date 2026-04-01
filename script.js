@@ -161,94 +161,145 @@ errorCount++
 // TEXTURE ENHANCEMENT
 //--------------------------------------------------
 
-function enhanceRegion(){
-
-canvas.width = video.clientWidth
-canvas.height = video.clientHeight
-targetX = canvas.width / 2
-targetY = canvas.height / 2
-let now = performance.now()
-fps = 1000 / (now - lastTime)
-lastTime = now
-
-ctx.drawImage(video,0,0,canvas.width,canvas.height)
-
-const innerRadius = 30
-const midRadius = 80
-
-const x = Math.max(midRadius,Math.min(canvas.width-midRadius,gazeX))
-const y = Math.max(midRadius,Math.min(canvas.height-midRadius,gazeY))
-
-const imgData = ctx.getImageData(
-x-midRadius,
-y-midRadius,
-midRadius*2,
-midRadius*2
-)
-
-const data = imgData.data
-
-for(let yOffset=0;yOffset<midRadius*2;yOffset++){
-for(let xOffset=0;xOffset<midRadius*2;xOffset++){
-
-const index = (yOffset*midRadius*2 + xOffset)*4
-
-const dx = xOffset-midRadius
-const dy = yOffset-midRadius
-
-const dist = Math.sqrt(dx*dx + dy*dy)
-
-let strength = 1
-
-if(dist < innerRadius){
-strength = 1.6
-}
-else if(dist < midRadius){
-strength = 1.25
+function gazePriority(dist) {
+  const foveal = 30
+  const transition = 80
+  if (dist <= foveal) return 1.0
+  if (dist <= transition) {
+    const t = (dist - foveal) / (transition - foveal)
+    return 0.5 * (1 + Math.cos(Math.PI * t))
+  }
+  return 0.1
 }
 
-data[index] *= strength
-data[index+1] *= strength
-data[index+2] *= strength
-
+function applySharpening(data, width, height) {
+  const kernel = [
+     0, -1,  0,
+    -1,  5, -1,
+     0, -1,  0
+  ]
+  const copy = new Uint8ClampedArray(data)
+  for (let y = 1; y < height - 1; y++) {
+    for (let x = 1; x < width - 1; x++) {
+      for (let c = 0; c < 3; c++) {
+        const i = (y * width + x) * 4 + c
+        const val =
+          copy[((y-1)*width + (x  ))*4+c] * kernel[1] +
+          copy[((y  )*width + (x-1))*4+c] * kernel[3] +
+          copy[((y  )*width + (x  ))*4+c] * kernel[4] +
+          copy[((y  )*width + (x+1))*4+c] * kernel[5] +
+          copy[((y+1)*width + (x  ))*4+c] * kernel[7]
+        data[i] = Math.min(255, Math.max(0, val))
+      }
+    }
+  }
 }
-}
 
-ctx.putImageData(imgData,x-midRadius,y-midRadius)
+function enhanceRegion() {
 
+  canvas.width = video.clientWidth
+  canvas.height = video.clientHeight
+  targetX = canvas.width / 2
+  targetY = canvas.height / 2
+  let now = performance.now()
+  fps = 1000 / (now - lastTime)
+  lastTime = now
 
-// draw zones
-ctx.beginPath()
-ctx.arc(x,y,innerRadius,0,2*Math.PI)
-ctx.strokeStyle="red"
-ctx.lineWidth=2
-ctx.stroke()
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
-ctx.beginPath()
-ctx.arc(x,y,midRadius,0,2*Math.PI)
-ctx.strokeStyle="orange"
-ctx.lineWidth=2
-ctx.stroke()
-//---------------- DISPLAY METRICS ----------------
+  const outerRadius = 80
 
-ctx.fillStyle = "white"
-ctx.font = "14px Arial"
+  const x = Math.max(outerRadius, Math.min(canvas.width  - outerRadius, gazeX))
+  const y = Math.max(outerRadius, Math.min(canvas.height - outerRadius, gazeY))
 
-let detectionRate = (detectedFrames / totalFrames * 100).toFixed(1)
-let avgJitter = (totalJitter / totalFrames).toFixed(2)
-let avgError = (errorSum / errorCount).toFixed(2)
+  const size = outerRadius * 2
+  const imgData = ctx.getImageData(x - outerRadius, y - outerRadius, size, size)
+  const data = imgData.data
 
-ctx.fillText("FPS: " + fps.toFixed(1), 10, 20)
-ctx.fillText("Detection: " + detectionRate + "%", 10, 40)
-ctx.fillText("Jitter: " + avgJitter, 10, 60)
-ctx.fillText("Error: " + avgError + " px", 10, 80)
-// draw reference center point
-ctx.fillStyle = "green"
-ctx.beginPath()
-ctx.arc(targetX,targetY,4,0,2*Math.PI)
-ctx.fill()
+  for (let yOffset = 0; yOffset < size; yOffset++) {
+    for (let xOffset = 0; xOffset < size; xOffset++) {
 
-requestAnimationFrame(enhanceRegion)
+      const index = (yOffset * size + xOffset) * 4
+
+      const dx = xOffset - outerRadius
+      const dy = yOffset - outerRadius
+      const dist = Math.sqrt(dx * dx + dy * dy)
+
+      const priority = gazePriority(dist)
+
+      if (priority > 0.8) {
+        // HIGH tier — contrast + brightness
+        // will sharpen separately below
+        const contrast = 1.4
+        for (let c = 0; c < 3; c++) {
+          const boosted = (data[index + c] - 128) * contrast + 128
+          data[index + c] = Math.min(255, Math.max(0, boosted * 1.2))
+        }
+
+      } else if (priority > 0.4) {
+        // MEDIUM tier — contrast only, faded by priority
+        const blend = (priority - 0.4) / 0.4
+        const contrast = 1 + 0.4 * blend
+        for (let c = 0; c < 3; c++) {
+          data[index + c] = Math.min(255, Math.max(0,
+            (data[index + c] - 128) * contrast + 128
+          ))
+        }
+
+      }
+      // LOW tier (priority <= 0.4) — pixel untouched
+
+    }
+  }
+
+  // sharpening pass on foveal zone only (inner 30px)
+  const fovealSize = 30 * 2
+  const fovealOffset = outerRadius - 30
+  const fovealData = ctx.getImageData(
+    x - 30,
+    y - 30,
+    fovealSize,
+    fovealSize
+  )
+  applySharpening(fovealData.data, fovealSize, fovealSize)
+  ctx.putImageData(fovealData, x - 30, y - 30)
+
+  ctx.putImageData(imgData, x - outerRadius, y - outerRadius)
+
+  // draw zones
+  ctx.beginPath()
+  ctx.arc(x, y, 30, 0, 2 * Math.PI)
+  ctx.strokeStyle = "red"
+  ctx.lineWidth = 2
+  ctx.stroke()
+
+  ctx.beginPath()
+  ctx.arc(x, y, 80, 0, 2 * Math.PI)
+  ctx.strokeStyle = "orange"
+  ctx.lineWidth = 2
+  ctx.stroke()
+
+  //---------------- DISPLAY METRICS ----------------
+
+  ctx.fillStyle = "white"
+  ctx.font = "14px Arial"
+
+  let detectionRate = (detectedFrames / totalFrames * 100).toFixed(1)
+  let avgJitter = (totalJitter / totalFrames).toFixed(2)
+  let avgError = (errorSum / errorCount).toFixed(2)
+
+  ctx.fillText("FPS: " + fps.toFixed(1), 10, 20)
+  ctx.fillText("Detection: " + detectionRate + "%", 10, 40)
+  ctx.fillText("Jitter: " + avgJitter, 10, 60)
+  ctx.fillText("Error: " + avgError + " px", 10, 80)
+
+  // draw reference center point
+  ctx.fillStyle = "green"
+  ctx.beginPath()
+  ctx.arc(targetX, targetY, 4, 0, 2 * Math.PI)
+  ctx.fill()
+
+  requestAnimationFrame(enhanceRegion)
 
 }
 
