@@ -310,6 +310,6 @@ function enhanceRegion() {
 
 video.onplay = ()=>{
 
-enhanceRegion()
+requestAnimationFrame(enhanceRegion)
 
 }
