@@ -1,0 +1,40 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Model training outputs
+model_output/
+*.pt
+*.pth
+*.h5
+*.pkl
+
+# Exported gaze logs
+exported_gaze_logs/
+*.log
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node modules (if any)
+node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# TensorFlow.js model weights (exclude large binary files)
+tfjs_model/weights.bin

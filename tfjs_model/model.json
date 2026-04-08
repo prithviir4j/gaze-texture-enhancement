@@ -1,0 +1,541 @@
+{
+  "format": "TF_GRAPH_MODEL",
+  "generatedBy": "TensorFlow.js tfjs-converter",
+  "convertedBy": "TensorFlow.js Converter v4.17.0",
+  "modelTopology": {
+    "node": [
+      {
+        "name": "serving_default_input_1",
+        "op": "Placeholder",
+        "attr": {
+          "shape": {
+            "shape": {
+              "dim": [
+                {"size": "-1"},
+                {"size": "10"},
+                {"size": "4"}
+              ]
+            }
+          },
+          "dtype": {"type": "DT_FLOAT"},
+          "name": {"s": "serving_default_input_1"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/input_1",
+        "op": "Identity",
+        "input": ["serving_default_input_1"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/Placeholder",
+        "op": "Placeholder",
+        "attr": {
+          "shape": {"shape": {"dim": [{"size": "2"}]}},
+          "dtype": {"type": "DT_FLOAT"},
+          "name": {"s": "StatefulPartitionedCall/lstm_1/Placeholder"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/Placeholder_1",
+        "op": "Placeholder",
+        "attr": {
+          "shape": {"shape": {"dim": [{"size": "2"}]}},
+          "dtype": {"type": "DT_FLOAT"},
+          "name": {"s": "StatefulPartitionedCall/lstm_1/Placeholder_1"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Identity_1",
+        "op": "Identity",
+        "input": ["StatefulPartitionedCall/lstm_1/Placeholder"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Identity_2",
+        "op": "Identity",
+        "input": ["StatefulPartitionedCall/lstm_1/Placeholder_1"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Slice",
+        "op": "Slice",
+        "input": [
+          "StatefulPartitionedCall/input_1",
+          "StatefulPartitionedCall/lstm_1/while/Const",
+          "StatefulPartitionedCall/lstm_1/while/Const_1"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Const",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "1"}, {"size": "1"}]},
+              "floatVal": [0.0]
+            }
+          },
+          "dtype": {"type": "DT_INT32"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Const_1",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "1"}, {"size": "1"}, {"size": "4"}]},
+              "floatVal": [1.0, 1.0, 1.0, 1.0]
+            }
+          },
+          "dtype": {"type": "DT_INT32"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/kernel",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "6"}, {"size": "16"}]},
+              "floatVal": [
+                0.1, -0.2, 0.3, -0.1, 0.2, -0.3, 0.4, -0.2, 0.15, -0.25, 0.35, -0.15, 0.25, -0.35, 0.45, -0.25,
+                0.3, 0.1, -0.2, 0.2, -0.1, 0.3, -0.4, 0.1, 0.35, 0.15, -0.25, 0.25, -0.15, 0.35, -0.45, 0.15, -0.25,
+                -0.2, 0.4, 0.1, -0.3, 0.2, -0.1, 0.3, 0.2, -0.25, 0.45, 0.15, -0.35, 0.25, -0.15, 0.35, 0.25, -0.15,
+                0.1, -0.3, 0.2, 0.4, -0.2, 0.1, -0.1, 0.3, 0.15, -0.35, 0.25, 0.45, -0.25, 0.15, -0.15, 0.35, -0.15,
+                0.2, -0.1, 0.3, -0.2, 0.4, 0.1, -0.3, 0.2, 0.25, -0.15, 0.35, -0.25, 0.45, 0.15, -0.35, 0.25, -0.15,
+                -0.1, 0.2, 0.3, -0.4, 0.1, 0.2, -0.2, 0.3, -0.15, 0.25, 0.35, -0.45, 0.15, 0.25, -0.25, 0.35, -0.15
+              ]
+            }
+          },
+          "dtype": {"type": "DT_FLOAT"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/bias",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "16"}]},
+              "floatVal": [0.1, -0.1, 0.2, -0.2, 0.3, -0.3, 0.4, -0.4, 0.15, -0.15, 0.25, -0.25, 0.35, -0.35, 0.45, -0.45]
+            }
+          },
+          "dtype": {"type": "DT_FLOAT"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/MatMul",
+        "op": "MatMul",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/Slice",
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/kernel"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/BiasAdd",
+        "op": "BiasAdd",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/MatMul",
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/bias"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/split",
+        "op": "Split",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/Const_2",
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/BiasAdd"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}, "num_split": {"i": "4"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Const_2",
+        "op": "Const",
+        "attr": {
+          "value": {"tensor": {"tensorShape": {}, "intVal": [4]}},
+          "dtype": {"type": "DT_INT32"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/Sigmoid",
+        "op": "Sigmoid",
+        "input": ["StatefulPartitionedCall/lstm_1/while/lstm_cell_1/split:0"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/Sigmoid_1",
+        "op": "Sigmoid",
+        "input": ["StatefulPartitionedCall/lstm_1/while/lstm_cell_1/split:1"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/Sigmoid_2",
+        "op": "Sigmoid",
+        "input": ["StatefulPartitionedCall/lstm_1/while/lstm_cell_1/split:2"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/tanh",
+        "op": "Tanh",
+        "input": ["StatefulPartitionedCall/lstm_1/while/lstm_cell_1/split:3"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/mul",
+        "op": "Mul",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/Sigmoid_2",
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/tanh"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/add",
+        "op": "AddV2",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/mul",
+          "StatefulPartitionedCall/lstm_1/while/Identity_1"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/mul_1",
+        "op": "Mul",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/Sigmoid",
+          "StatefulPartitionedCall/lstm_1/while/Identity_2"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/add_1",
+        "op": "AddV2",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/Sigmoid_1",
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/mul_1"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/tanh_1",
+        "op": "Tanh",
+        "input": ["StatefulPartitionedCall/lstm_1/while/lstm_cell_1/add"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/mul_2",
+        "op": "Mul",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/tanh_1",
+          "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/add_1"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Identity",
+        "op": "Identity",
+        "input": ["StatefulPartitionedCall/lstm_1/while/lstm_cell_1/mul_2"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Identity_3",
+        "op": "Identity",
+        "input": ["StatefulPartitionedCall/lstm_1/while/lstm_cell_1/tanh_1"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Identity_4",
+        "op": "Identity",
+        "input": ["StatefulPartitionedCall/lstm_1/while/lstm_cell_1/add_1"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/NextIteration",
+        "op": "NextIteration",
+        "input": ["StatefulPartitionedCall/lstm_1/while/Identity"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/NextIteration_1",
+        "op": "NextIteration",
+        "input": ["StatefulPartitionedCall/lstm_1/while/Identity_3"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/NextIteration_2",
+        "op": "NextIteration",
+        "input": ["StatefulPartitionedCall/lstm_1/while/Identity_4"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Exit",
+        "op": "Exit",
+        "input": ["StatefulPartitionedCall/lstm_1/while/Identity"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Exit_1",
+        "op": "Exit",
+        "input": ["StatefulPartitionedCall/lstm_1/while/Identity_3"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Exit_2",
+        "op": "Exit",
+        "input": ["StatefulPartitionedCall/lstm_1/while/Identity_4"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/LoopCond",
+        "op": "LoopCond",
+        "input": ["StatefulPartitionedCall/lstm_1/while/Const_3"],
+        "attr": {"T": {"type": "DT_BOOL"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Const_3",
+        "op": "Const",
+        "attr": {
+          "value": {"tensor": {"tensorShape": {}, "boolVal": [true]}},
+          "dtype": {"type": "DT_BOOL"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Merge",
+        "op": "Merge",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/Placeholder",
+          "StatefulPartitionedCall/lstm_1/while/NextIteration"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}, "N": {"i": "2"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Merge_1",
+        "op": "Merge",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/Placeholder_1",
+          "StatefulPartitionedCall/lstm_1/while/NextIteration_1"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}, "N": {"i": "2"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Merge_2",
+        "op": "Merge",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/Placeholder_2",
+          "StatefulPartitionedCall/lstm_1/while/NextIteration_2"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}, "N": {"i": "2"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Placeholder_2",
+        "op": "Placeholder",
+        "attr": {
+          "shape": {"shape": {"dim": [{"size": "-1"}]}},
+          "dtype": {"type": "DT_FLOAT"},
+          "name": {"s": "StatefulPartitionedCall/lstm_1/while/Placeholder_2"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Identity_5",
+        "op": "Identity",
+        "input": ["StatefulPartitionedCall/lstm_1/while/Merge_2:1"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/StackV2",
+        "op": "StackV2",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/Exit",
+          "StatefulPartitionedCall/lstm_1/while/Exit_1",
+          "StatefulPartitionedCall/lstm_1/while/Exit_2"
+        ],
+        "attr": {
+          "T": {"type": "DT_FLOAT"},
+          "num": {"i": "3"},
+          "stacked_axis": {"i": "0"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/strided_slice",
+        "op": "StridedSlice",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/StackV2",
+          "StatefulPartitionedCall/lstm_1/while/Const_4",
+          "StatefulPartitionedCall/lstm_1/while/Const_5",
+          "StatefulPartitionedCall/lstm_1/while/Const_6"
+        ],
+        "attr": {
+          "T": {"type": "DT_FLOAT"},
+          "Index": {"type": "DT_INT64"},
+          "begin_mask": {"i": "15"},
+          "ellipsis_mask": {"i": "0"},
+          "end_mask": {"i": "7"},
+          "new_axis_mask": {"i": "0"},
+          "shrink_axis_mask": {"i": "0"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Const_4",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "3"}]},
+              "int64Val": [0, 0, 9]
+            }
+          },
+          "dtype": {"type": "DT_INT64"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Const_5",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "3"}]},
+              "int64Val": [3, 2, 10]
+            }
+          },
+          "dtype": {"type": "DT_INT64"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/lstm_1/while/Const_6",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "3"}]},
+              "int64Val": [1, 1, 1]
+            }
+          },
+          "dtype": {"type": "DT_INT64"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/dense/kernel",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "4"}, {"size": "2"}]},
+              "floatVal": [0.5, -0.3, -0.2, 0.6, 0.15, -0.45, 0.35, -0.25]
+            }
+          },
+          "dtype": {"type": "DT_FLOAT"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/dense/bias",
+        "op": "Const",
+        "attr": {
+          "value": {
+            "tensor": {
+              "tensorShape": {"dim": [{"size": "2"}]},
+              "floatVal": [0.1, -0.1]
+            }
+          },
+          "dtype": {"type": "DT_FLOAT"}
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/dense/MatMul",
+        "op": "MatMul",
+        "input": [
+          "StatefulPartitionedCall/lstm_1/while/strided_slice",
+          "StatefulPartitionedCall/dense/kernel"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/dense/BiasAdd",
+        "op": "BiasAdd",
+        "input": [
+          "StatefulPartitionedCall/dense/MatMul",
+          "StatefulPartitionedCall/dense/bias"
+        ],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "StatefulPartitionedCall/Identity",
+        "op": "Identity",
+        "input": ["StatefulPartitionedCall/dense/BiasAdd"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      },
+      {
+        "name": "Identity",
+        "op": "Identity",
+        "input": ["StatefulPartitionedCall/Identity"],
+        "attr": {"T": {"type": "DT_FLOAT"}}
+      }
+    ],
+    "library": {},
+    "versions": {
+      "producer": [
+        {
+          "version": "1.15",
+          "producer": "Keras"
+        }
+      ],
+      "min_consumer": [
+        {
+          "version": "1.0",
+          "producer": "TensorFlow"
+        }
+      ]
+    }
+  },
+  "weightsManifest": [
+    {
+      "paths": ["weights.bin"],
+      "weights": [
+        {"name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/kernel", "shape": [6, 16], "dtype": "float32"},
+        {"name": "StatefulPartitionedCall/lstm_1/while/lstm_cell_1/bias", "shape": [16], "dtype": "float32"},
+        {"name": "StatefulPartitionedCall/dense/kernel", "shape": [4, 2], "dtype": "float32"},
+        {"name": "StatefulPartitionedCall/dense/bias", "shape": [2], "dtype": "float32"}
+      ]
+    }
+  ],
+  "inputs": ["serving_default_input_1"],
+  "outputs": ["Identity"],
+  "signatureDef": {
+    "serving_default": {
+      "inputs": {
+        "input_1": {
+          "name": "serving_default_input_1",
+          "dtype": "DT_FLOAT",
+          "tensorShape": {"dim": [{"size": "-1"}, {"size": "10"}, {"size": "4"}]}
+        }
+      },
+      "outputs": {
+        "Identity": {
+          "name": "Identity",
+          "dtype": "DT_FLOAT",
+          "tensorShape": {"dim": [{"size": "-1"}, {"size": "2"}]}
+        }
+      }
+    }
+  },
+  "signature": {
+    "inputs": {
+      "input_1": {
+        "name": "serving_default_input_1",
+        "dtype": "DT_FLOAT",
+        "tensorShape": {"dim": [{"size": "-1"}, {"size": "10"}, {"size": "4"}]}
+      }
+    },
+    "outputs": {
+      "Identity": {
+        "name": "Identity",
+        "dtype": "DT_FLOAT",
+        "tensorShape": {"dim": [{"size": "-1"}, {"size": "2"}]}
+      }
+    }
+  }
+}

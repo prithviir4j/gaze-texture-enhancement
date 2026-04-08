@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gaze Predictive Streaming</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; overflow: hidden; background: black; font-family: monospace; }
+
+    #overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 12px 16px;
+      border-radius: 8px;
+      z-index: 10;
+      min-width: 200px;
+      line-height: 1.8;
+      font-size: 13px;
+    }
+
+    #overlay button {
+      margin-top: 8px;
+      display: block;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    #overlay button:hover { background: rgba(255,255,255,0.2); }
+    #overlay select {
+      margin-top: 6px;
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    #overlay select option {
+      background: white;
+      color: black;
+    }
+    #overlay label {
+      display: block;
+      margin-top: 6px;
+      color: #cfd8ff;
+    }
+    .mode-buttons {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .mode-btn {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 4px;
+      padding: 5px 8px;
+      text-align: left;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 11px;
+    }
+    .mode-btn.active {
+      border-color: #58b6ff;
+      background: rgba(88,182,255,0.2);
+    }
+
+    #status {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: #ffcc00;
+      font-size: 14px;
+      font-weight: bold;
+      background: rgba(0,0,0,0.7);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,204,0,0.4);
+      z-index: 10;
+    }
+
+    /* 2D gaze crosshair — always on top, no 3D depth issues */
+    #gaze-cursor {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 0, 0.35);
+      border: 3px solid #ffff00;
+      box-shadow: 0 0 12px 4px rgba(255,255,0,0.6);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 100;
+      transition: left 0.08s, top 0.08s;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="overlay">
+    <div id="metrics">Loading…</div>
+    <label for="mode-select">Prediction Mode</label>
+    <select id="mode-select">
+      <option value="reactive" selected>Reactive (Current Gaze)</option>
+      <option value="kalman">Kalman (200 ms lookahead)</option>
+      <option value="baseline">Baseline Smoothing Predictor</option>
+      <option value="dblstm">DB-LSTM (Phase 3)</option>
+    </select>
+    <div class="mode-buttons" id="mode-buttons">
+      <button class="mode-btn active" data-mode="reactive" type="button">Use Reactive</button>
+      <button class="mode-btn" data-mode="kalman" type="button">Use Kalman</button>
+      <button class="mode-btn" data-mode="baseline" type="button">Use Baseline</button>
+      <button class="mode-btn" data-mode="dblstm" type="button">Use DB-LSTM</button>
+    </div>
+    <label for="scene-select">Scene</label>
+    <select id="scene-select">
+      <option value="gallery" selected>Gallery</option>
+      <option value="tunnel">Tunnel</option>
+    </select>
+    <!-- BUG FIX: exportGaze was called via onclick but was a module export not on window.
+         Fixed by calling window.exportGaze which main.js sets after init. -->
+    <button onclick="window.exportGaze && window.exportGaze()">⬇ Export Gaze Log</button>
+  </div>
+
+  <div id="status">Initializing…</div>
+  <div id="gaze-cursor"></div>
+
+  <!-- Hidden video for face tracking -->
+  <video id="video" autoplay muted playsinline style="display:none;"></video>
+
+  <!-- BUG FIX: Load order was wrong. three.module.js inside a type="module" set window.THREE
+       AFTER main.js already started, causing THREE to be undefined in streaming.js/scene.js.
+       Fix: load Three.js as a plain UMD script FIRST so window.THREE is available synchronously. -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <!-- face-api.js bundles its own TF.js internally — do NOT load tfjs separately,
+       it causes duplicate backend registration and crashes TF's engine. -->
+  <!-- Face API (must be before main.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <!-- Phase 3 ML inference -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4/dist/tf.min.js"></script>
+
+  <!-- Main app — loads after all globals are available -->
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
