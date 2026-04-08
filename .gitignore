@@ -38,3 +38,9 @@ __pycache__/
 
 # TensorFlow.js model weights (exclude large binary files)
 tfjs_model/weights.bin
+
+# Mentor presentation / internal docs
+MENTOR_PRESENTATION.md
+MENTOR_DEMO_SCRIPT.md
+DEMO_GUIDE.md
+RESULT_RECORDING_TEMPLATE.md
