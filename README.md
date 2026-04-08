@@ -329,13 +329,6 @@ Potential extensions include:
 - `tfjs_model/model.json` - TensorFlow.js model architecture
 - `tfjs_model/weights.bin` - Model weights for inference
 
-### Documentation Files
-- `README.md` - Project documentation (this file)
-- `MENTOR_DEMO_SCRIPT.md` - Complete presentation script
-- `RESULT_RECORDING_TEMPLATE.md` - Data collection framework
-- `DEMO_GUIDE.md` - Step-by-step usage instructions
-- `MENTOR_PRESENTATION.md` - Technical architecture overview
-
 ### Results and Analysis
 - `RESULTS_VISUALIZATION.py` - Chart generation script
 - `results/` directory with all performance charts
