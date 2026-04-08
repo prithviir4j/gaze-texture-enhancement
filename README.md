@@ -86,12 +86,15 @@ graph TD
     D --> D2[Kalman Filter]
     D --> D3[DB-LSTM Neural Network]
     
-    style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style C fill:#e8f5e8
-    style D fill:#fff3e0
-    style E fill:#fce4ec
-    style F fill:#f1f8e9
+    style A fill:#e1f5fe,stroke:#333,stroke-width:2px,color:#000
+    style B fill:#f3e5f5,stroke:#333,stroke-width:2px,color:#000
+    style C fill:#e8f5e8,stroke:#333,stroke-width:2px,color:#000
+    style D fill:#fff3e0,stroke:#333,stroke-width:2px,color:#000
+    style E fill:#fce4ec,stroke:#333,stroke-width:2px,color:#000
+    style F fill:#f1f8e9,stroke:#333,stroke-width:2px,color:#000
+    style D1 fill:#ffebee,stroke:#333,stroke-width:2px,color:#000
+    style D2 fill:#e8eaf6,stroke:#333,stroke-width:2px,color:#000
+    style D3 fill:#f3e5f5,stroke:#333,stroke-width:2px,color:#000
 ```
 
 **System Flow:**
@@ -107,15 +110,15 @@ graph LR
     G --> H[Texture Loading<br/>& Application]
     H --> I[3D Scene<br/>Rendering]
     
-    style A fill:#e3f2fd
-    style B fill:#f3e5f5
-    style C fill:#e8f5e8
-    style D fill:#fff3e0
-    style E fill:#fce4ec
-    style F fill:#f1f8e9
-    style G fill:#e0f2f1
-    style H fill:#e8eaf6
-    style I fill:#fff8e1
+    style A fill:#e3f2fd,stroke:#333,stroke-width:2px,color:#000
+    style B fill:#f3e5f5,stroke:#333,stroke-width:2px,color:#000
+    style C fill:#e8f5e8,stroke:#333,stroke-width:2px,color:#000
+    style D fill:#fff3e0,stroke:#333,stroke-width:2px,color:#000
+    style E fill:#fce4ec,stroke:#333,stroke-width:2px,color:#000
+    style F fill:#f1f8e9,stroke:#333,stroke-width:2px,color:#000
+    style G fill:#e0f2f1,stroke:#333,stroke-width:2px,color:#000
+    style H fill:#e8eaf6,stroke:#333,stroke-width:2px,color:#000
+    style I fill:#fff8e1,stroke:#333,stroke-width:2px,color:#000
 ```
 
 **Prediction Models Comparison:**
@@ -138,13 +141,13 @@ graph TB
     B --> F
     C --> G
     
-    style A fill:#ffcdd2
-    style B fill:#f8bbd9
-    style C fill:#e1bee7
-    style D fill:#c8e6c9
-    style E fill:#ffebee
-    style F fill:#fce4ec
-    style G fill:#f3e5f5
+    style A fill:#ffcdd2,stroke:#333,stroke-width:2px,color:#000
+    style B fill:#f8bbd9,stroke:#333,stroke-width:2px,color:#000
+    style C fill:#e1bee7,stroke:#333,stroke-width:2px,color:#000
+    style D fill:#c8e6c9,stroke:#333,stroke-width:2px,color:#000
+    style E fill:#ffebee,stroke:#333,stroke-width:2px,color:#000
+    style F fill:#fce4ec,stroke:#333,stroke-width:2px,color:#000
+    style G fill:#f3e5f5,stroke:#333,stroke-width:2px,color:#000
 ```
 
 ## Models Used
