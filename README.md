@@ -254,12 +254,12 @@ The project can also run inside a Docker container.
 
 **Build container:**
 ```bash
-docker build -t gaze-streaming-demo .
+docker load -i gaze_texture_docker.tar
 ```
 
 **Run container:**
 ```bash
-docker run -p 8000:8000 gaze-streaming-demo
+docker run -it ubuntu:22.04 /bin/bash
 ```
 
 Then open: `http://localhost:8000`
